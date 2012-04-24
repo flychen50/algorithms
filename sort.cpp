@@ -35,7 +35,7 @@ int qsort1(int* x,int l,int u){
     return 0;
 
   int m=l;
-  for(int i=l+1;i<u;i++){
+  for(int i=l+1;i<=u;i++){
     if(x[i]<x[l]){
       swap(x[++m],x[i]);
     }
@@ -52,7 +52,7 @@ int main(int argc,char**argv){
   int x[10]={99,19,8,88,23,24,39,23,22,9};
 
   // isort(x,10);
-  qsort1(x,0,9);
+  qsort1(x,0,10);
 
   tprint(x,10);
     
