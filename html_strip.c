@@ -68,7 +68,26 @@ int php_tag_find(char *tag, int len, char *set) {
 	free(norm);
 	return done;
 }
+/* {{{ php_strip_tags
 
+	A simple little state-machine to strip out html and php tags
+
+	State 0 is the output state, State 1 means we are inside a
+	normal html tag and state 2 means we are inside a php tag.
+
+	The state variable is passed in to allow a function like fgetss
+	to maintain state across calls to the function.
+
+	lc holds the last significant character read and br is a bracket
+	counter.
+
+	When an allow string is passed in we keep track of the string
+	in state 1 and when the tag is closed check it against the
+	allow string to see if we should allow it.
+
+	swm: Added ability to strip <?xml tags without assuming it PHP
+	code.
+*/
 size_t php_strip_tags_ex(char *rbuf, int len, int *stateptr, char *allow, int allow_len, bool allow_tag_spaces)
 {
 	char *tbuf, *buf, *p, *tp, *rp, c, lc;
@@ -346,7 +365,7 @@ reg_char:
 
 size_t php_strip_tags(char *rbuf, int len, int *stateptr, char *allow, int allow_len) /* {{{ */
 {
-	return php_strip_tags_ex(rbuf, len, stateptr, allow, allow_len, 1);
+	return php_strip_tags_ex(rbuf, len, stateptr, allow, allow_len, 0);
 }
 
 int main(int argc,char**argv){
